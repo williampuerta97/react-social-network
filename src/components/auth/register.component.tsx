@@ -9,7 +9,7 @@ type RegisterFormData = {
 
 const RegisterForm: React.FC = () => {
 
-    const { register, watch, formState: { errors }, handleSubmit } = useForm<RegisterFormData>();
+    const { register, formState: { errors }, handleSubmit } = useForm<RegisterFormData>();
 
     const onSubmit: SubmitHandler<RegisterFormData> = data => {
         console.log(data);
