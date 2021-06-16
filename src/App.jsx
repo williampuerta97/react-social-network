@@ -1,14 +1,14 @@
 import { Nav } from "./components/navigation/nav.component";
-import UserState from "./context/User/UserState";
+import AuthState from "./context/Auth/AuthState";
 
 function App() {
-	return (
-		<UserState>
-			<div className="h-screen">
-				<Nav />
-			</div>
-		</UserState>
-	);
+  return (
+    <AuthState>
+      <div className="h-screen">
+        <Nav />
+      </div>
+    </AuthState>
+  );
 }
 
 export default App;

@@ -6,7 +6,7 @@ function RegisterPage() {
         <div className="px-12 w-full flex">
             <div className="w-2/4 mx-auto py-4">
                 <h1 className="text-center font-bold text-2xl">Registrarse</h1>
-                <div className="border-2 border-gray-500 p-4 rounded mt-4">
+                <div className="border border-gray-300 p-4 rounded mt-4">
                     <div className="h-1/2">
                         <RegisterForm />
                     </div>
