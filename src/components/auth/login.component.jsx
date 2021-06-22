@@ -1,36 +1,49 @@
 import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useHistory } from "react-router-dom";
 import Spinner from "../../assets/spinner.gif";
+
+//Material React
 import SnackBar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
 
+//Redux
+import { useDispatch } from "react-redux";
+import { LOGIN } from "../../redux/actions/types";
+
 const LoginForm = () => {
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-    reset,
-  } = useForm();
+
+  const { register, formState: { errors }, handleSubmit } = useForm();
   const [backendErrorMessage, setBackendErrorMessage] = useState(null);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const history = useHistory();
+
+  // Redux
+  const dispatch = useDispatch();
+
 
   const onSubmit = async (data) => {
     setLoading(true);
-    const resp = await axios.post("http://localhost:8000/api/register", data);
+    const resp = await axios.post("http://localhost:8000/api/login", data);
+    
+    console.log(resp);
 
     if (resp.data?.message) {
       setBackendErrorMessage(resp.data.message);
       setOpen(true);
+
       return setLoading(false);
     }
 
-    setBackendErrorMessage(null);
-    setLoading(false);
-    reset();
+    localStorage.setItem("app-token", resp.data?.access_token);
 
-    localStorage.setItem("app-token", resp.data?.token);
+    dispatch({
+      type: LOGIN,
+      payload: resp.data.user
+    })
+    history.push('/');
   };
 
   if (loading) {
@@ -94,6 +107,7 @@ const LoginForm = () => {
           </button>
         </div>
       </form>
+
       <SnackBar
         open={open}
         autoHideDuration={6000}

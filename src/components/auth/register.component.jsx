@@ -4,24 +4,17 @@ import { useForm } from "react-hook-form";
 import Spinner from "../../assets/spinner.gif";
 import SnackBar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
+import { useHistory } from "react-router-dom";
 
 const RegisterForm = () => {
-  const backendErrorsInitialValue = {
-    name: "",
-    email: "",
-    password: "",
-  };
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-    reset,
-  } = useForm();
+  const backendErrorsInitialValue = { name: "", email: "", password: ""};
+  const { register, formState: { errors }, handleSubmit, reset } = useForm();
   const [backendErrors, setBackendErrors] = useState(backendErrorsInitialValue);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const onSubmit = async (data) => {
+    
     setLoading(true);
     const resp = await axios.post("http://localhost:8000/api/register", data);
 

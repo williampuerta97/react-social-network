@@ -1,18 +1,41 @@
-import { useContext } from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  NavLink,
-} from "react-router-dom";
-import AuthContext from "../../context/Auth/AuthContext";
+import { BrowserRouter as Router, Switch, Route, NavLink, useHistory, withRouter } from "react-router-dom";
 import HomePage from "../../pages/home_page";
 import LoginPage from "../../pages/login_page";
 import RegisterPage from "../../pages/register_page";
 import "./nav.component.css";
 
+//redux
+import { useSelector, useDispatch } from "react-redux";
+import axios from 'axios';
+import { LOGOUT } from "../../redux/actions/types";
+
 export const Nav = () => {
-  const { authUser } = useContext(AuthContext);
+
+  const loggedinUser = useSelector(state => state.loggedinUser);
+  const isLogged = useSelector(state => state.isLogged);
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  const logout = async () => {
+    const resp = await axios.post('http://localhost:8000/api/logout', {},{
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        Authorization : `Bearer ${localStorage.getItem('app-token')}`
+      }
+    });
+
+    if(resp.status === 200){
+      localStorage.removeItem('app-token');
+      dispatch({
+        type: LOGOUT,
+      });
+      console.log(resp?.data.message);
+      //history.push('/login');
+    }
+  }
+
+  
 
   return (
     <Router>
@@ -24,17 +47,31 @@ export const Nav = () => {
                 <span className="my-auto">Social Network</span>
               </NavLink>
             </li>
-            <li className="ml-auto px-3 flex">
-              <NavLink to="/login" className="my-auto p-2 flex rounded">
-                <span className="my-auto">Iniciar sesión</span>
-              </NavLink>
-            </li>
-            <li className="px-3 flex">
-              <NavLink to="/registro" className="my-auto p-2 flex rounded">
-                <span className="my-auto">Registrarse</span>
-              </NavLink>
-            </li>
-            {authUser ?? <p>{authUser?.first_name}</p>}
+            { isLogged && loggedinUser 
+            ? (<>
+                <li className="ml-auto px-3 flex">
+                  <span className="my-auto p-2 flex rounded">
+                    <span className="my-auto">{loggedinUser.name}</span>
+                  </span>
+                </li>
+                <li className="px-3 flex">
+                  <span className="my-auto p-2 flex rounded">
+                    <button className="my-auto" onClick={()=> logout()}>Cerrar sesión</button>
+                  </span>
+                </li>
+              </>) 
+            : (<>
+              <li className="ml-auto px-3 flex">
+                <NavLink to="/login" className="my-auto p-2 flex rounded">
+                  <span className="my-auto">Iniciar sesión</span>
+                </NavLink>
+              </li>
+              <li className="px-3 flex">
+                <NavLink to="/registro" className="my-auto p-2 flex rounded">
+                  <span className="my-auto">Registrarse</span>
+                </NavLink>
+              </li>
+            </>)}
           </ul>
         </nav>
 

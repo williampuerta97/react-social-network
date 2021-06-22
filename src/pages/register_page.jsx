@@ -1,7 +1,21 @@
-import React from 'react'
+import { useEffect } from 'react'
+import { useHistory } from 'react-router-dom';
 import RegisterForm from '../components/auth/register.component';
 
 function RegisterPage() {
+
+    const history = useHistory();
+
+
+    useEffect(() => {
+        const token = localStorage.getItem('app-token');
+
+        if (token) {
+            return history.push('/')
+        }
+    }, [history]);
+
+
     return (
         <div className="px-12 w-full flex">
             <div className="w-2/4 mx-auto py-4">

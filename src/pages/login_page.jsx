@@ -1,6 +1,19 @@
+import { useHistory } from "react-router-dom";
 import LoginForm from "../components/auth/login.component";
+import { useEffect } from 'react';
 
 function LoginPage() {
+
+  const history = useHistory();
+
+  useEffect(() => {
+    const token = localStorage.getItem('app-token');
+
+    if (token) {
+      return history.push('/')
+    }
+  }, [history]);
+
   return (
     <div className="px-12 w-full flex">
       <div className="w-2/4 mx-auto py-4">
@@ -16,19 +29,3 @@ function LoginPage() {
 }
 
 export default LoginPage;
-
-/* import { useContext } from "react";
-import AuthContext from "../context/Auth/AuthContext";
-
-function LoginPage() {
-  const authContext = useContext(AuthContext);
-
-  return (
-    <div>
-      <h1>Login</h1>
-      <button onClick={() => authContext.getProfile()}>Obtener usuario</button>
-    </div>
-  );
-}
-
-export default LoginPage; */
